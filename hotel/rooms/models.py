@@ -17,14 +17,14 @@ class Room(models.Model):
         (QUADRUPLE, 'Cuadruple')
     )
 
-    code = models.AutoField(db_column='HABITACION_ID', primary_key=True)
-    type = models.IntegerField("Tipo", db_column='TIPO_HABITACION', default=SIMPLE, choices=RoomTypes, unique=True)
-    guest = models.IntegerField("Máximo personas", db_column='MAXIMO_PERSONAS')
+    code = models.AutoField("Código habitación", primary_key=True)
+    type = models.IntegerField("Tipo", default=SIMPLE, choices=RoomTypes, unique=True)
+    guest = models.IntegerField("Máximo personas")
     # Cantidad de habitaciones disponibles
-    availability = models.IntegerField("Disponibles", db_column='DISPONIBILIDAD', default=0)
-    value = models.DecimalField("Valor por día", db_column='VALOR_DIA', max_digits=18, decimal_places=2)
+    availability = models.IntegerField("Disponibles", default=0)
+    value = models.DecimalField("Valor por día", max_digits=18, decimal_places=2)
     file = models.FileField(
-        "Foto", upload_to='uploads', blank=True, null=True, db_column='FILE')
+        "Foto", upload_to='uploads', blank=True, null=True)
 
     class Meta:
         db_table = 'HABITACIONES'

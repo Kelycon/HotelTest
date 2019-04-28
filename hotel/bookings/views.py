@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect
-from django.db.models import F, Case, IntegerField, When, Q, Count
-from django.views.generic import CreateView, DetailView, ListView
+from django.core.urlresolvers import reverse
+from django.db.models import Q
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from retools.lock import Lock, LockTimeout
@@ -12,7 +13,7 @@ from rooms.models import Room
 from django.contrib.auth.models import User
 from rooms.forms import FindAvailabilityListForm
 from .forms import (
-    BookingCreateForm
+    BookingCreateForm, BookingUpdateForm
 )
 
 
@@ -66,6 +67,7 @@ class BookingCreate(CreateView):
                 code = self.get_unique_code()
 
                 self.object.code = code
+                self.object.user = self.request.user
                 self.object.total = self.get_total_booking(self.object.check_in, self.object.check_out, self.object.room.value)
 
                 self.object.save()
@@ -174,3 +176,15 @@ class BookingList(ListView):
 
     def get_queryset(self):
         return Booking.objects.filter(user_id=self.request.user.id)
+
+
+class BookingUpdate(UpdateView):
+    model = Booking
+    form_class = BookingUpdateForm
+
+    @method_decorator(login_required)
+    def dispatch(self, request, pk):
+        return super(BookingUpdate, self).dispatch(request=request)
+
+    def get_success_url(self):
+        return reverse("booking-detail", kwargs={'pk': self.kwargs.get('pk')})

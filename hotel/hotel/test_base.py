@@ -30,13 +30,8 @@ class TestBase(TransactionTestCase):
             'password': data.get('password')
         })
         self.assertEquals(response.status_code, 200)
-        content = json.loads(response.content.decode('utf-8'))
-        self.assertTrue(content.get('success'))
-        return content
 
     def signout(self):
         response = self.client.post(reverse('signout-user'))
         self.assertEquals(response.status_code, 200)
-        content = json.loads(response.content.decode('utf-8'))
-        self.assertTrue(content.get('success'))
-        return content
+

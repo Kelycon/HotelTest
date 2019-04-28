@@ -27,7 +27,7 @@ class UsersTests(TestBase):
             'email': 'rub@rub.com'
         }
 
-        response = self.client.post(reverse('signup-user'), data)
+        self.client.post(reverse('signup-user'), data)
 
         self.assertTrue(
             User.objects.filter(username=data.get('username'), email=data.get('email')).exists()

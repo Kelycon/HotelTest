@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from .settings import MEDIA_ROOT
+from .views import index
 
 urlpatterns = [
+    url(r'^$', index, name='home'),
     url(r'^rooms/', include('rooms.urls')),
     url(r'^bookings/', include('bookings.urls')),
     url(r'^users/', include('users.urls')),

@@ -2,6 +2,9 @@
 {% load custom_tags %}
 
 {% block content %}
+<div class="alert alert-info">
+    <strong>Mostrando reserva: {{ booking.code }}</strong>
+</div>
 <div class="row">
     <div class="col-md-4 order-md-2 mb-4">
     <h4 class="d-flex justify-content-between align-items-center mb-3">
@@ -17,15 +20,15 @@
           </h6>
           <small class="text-muted">{{ row.check_in }} - {{ row.check_out }}</small>
         </div>
-        <span class="text-muted">{{ row.total }}€</span>
+        <span class="text-muted">{{ row.room.type|get_room_name }}</span>
       </li>
       {% endif %}
       {% endfor %}
     </ul>
   </div>
   <div class="col-md-8 order-md-1">
-    <h4 class="mb-3">Datos personales</h4>
-    <form class="needs-validation">
+    <h4 class="mb-3">Datos de reserva</h4>
+    <form class="needs-validation" method="post" action="{% url 'booking-update' pk=booking.code %}">
       {% csrf_token %}
       <div class="row">
         <div class="col-md-6 mb-3">
@@ -69,7 +72,9 @@
         </div>
         <div class="mb-3 col-md-12">
           <label for="email">Comentario adicional <span class="text-muted">(Opcional)</span></label>
-          <textarea value="{{ booking.observations }}" name="observations" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          <textarea name="observations" class="form-control" id="exampleFormControlTextarea1" rows="3">
+            {{ booking.observations }}
+          </textarea>
         </div>
       </div>
       <hr class="mb-4">
@@ -79,10 +84,9 @@
       <div class="d-block my-3">
 
         <div class="form-group">
-          <label for="exampleFormControlSelect1">Example select</label>
-          <select value="{{ booking.card_payment_type }}" class="form-control" name="card_payment_type" id="exampleFormControlSelect1">
-            {% for value, text in form.card_payment_type.field.choices %}
-                <option value="{{ value }}">{{ text }}</option>
+          <select class="form-control" name="card_payment_type" id="exampleFormControlSelect1">
+            {% for value, text in booking.CardTypes %}
+                <option {% if value == booking.card_payment_type %} selected="" {% endif %} value="{{ value }}">{{ text }}</option>
             {% endfor %}
           </select>
         </div>
@@ -101,7 +105,7 @@
         </div>
         <div class="col-md-6 mb-3">
           <label for="cc-number">Número tarjeta</label>
-          <input value="{{ booking.card_payment_number }}" type="text" name="card_payment_number" class="form-control" id="cc-number" placeholder="" required="">
+          <input value="{{ booking.card_payment_number }}" type="number" name="card_payment_number" class="form-control" id="cc-number" placeholder="" required="">
           {% if form.card_payment_number.errors %}
           <div class="invalid-feedback d-block">
             {{ form.card_payment_number.errors }}
@@ -112,7 +116,12 @@
       <div class="row">
         <div class="col-md-4 mb-3">
           <label for="cc-expiration">Mes vencimiento</label>
-          <input value="{{ booking.card_payment_expiration_month }}" name="card_payment_expiration_month" type="text" class="form-control" id="cc-expiration" placeholder="" required="">
+          <select class="form-control" name="card_payment_expiration_month" required="">
+            {% for i in i|rjust:12 %}
+                <option {% if forloop.counter == booking.card_payment_expiration_month %} selected="" {% endif %} value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+            {% endfor %}
+
+          </select>
           {% if form.card_payment_expiration_month.errors %}
           <div class="invalid-feedback d-block">
             {{ form.card_payment_expiration_month.errors }}
@@ -121,7 +130,7 @@
         </div>
         <div class="col-md-4 mb-3">
           <label for="cc-expiration">Año vencimiento</label>
-          <input value="{{ booking.card_payment_expiration_year }}" type="text" name="card_payment_expiration_year" class="form-control" id="cc-expiration" placeholder="" required="">
+          <input value="{{ booking.card_payment_expiration_year }}" type="number" min="2019" name="card_payment_expiration_year" class="form-control" id="cc-expiration" placeholder="" required="">
           {% if form.card_payment_expiration_year.errors %}
           <div class="invalid-feedback d-block">
             {{ form.card_payment_expiration_year.errors }}
@@ -130,7 +139,7 @@
         </div>
         <div class="col-md-4 mb-3">
           <label for="cc-cvv">CVC</label>
-          <input value="{{ booking.card_payment_cvc }}" name="card_payment_cvc" type="text" class="form-control" id="cc-cvv" placeholder="" required="">
+          <input value="{{ booking.card_payment_cvc }}" name="card_payment_cvc" min="000" type="number" class="form-control" id="cc-cvv" placeholder="" required="">
           {% if form.card_payment_cvc.errors %}
           <div class="invalid-feedback d-block">
             {{ form.card_payment_cvc.errors }}
@@ -139,7 +148,7 @@
         </div>
       </div>
       <hr class="mb-4">
-      <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+      <button class="btn btn-primary btn-lg btn-block" type="submit">Actualizar reserva</button>
     </form>
   </div>
 </div>
