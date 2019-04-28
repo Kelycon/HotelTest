@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+{% load custom_tags %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-12 col-mb3">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Código de reserva</th>
+              <th scope="col">Fecha ingreso</th>
+              <th scope="col">Fecha salida</th>
+              <th scope="col">Habitación</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in bookings %}
+            {% if row.code %}
+            <tr>
+              <th scope="row"><a href="{% url 'booking-detail' pk=row.code %}">{{ row.code }}</a></th>
+              <td>{{ row.check_in }}</td>
+              <td>{{ row.check_out }}</td>
+              <td>{{ row.room.type|get_room_name  }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

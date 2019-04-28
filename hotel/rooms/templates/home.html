@@ -1,0 +1,71 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div id="booking" class="section">
+        <div class="section-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-md-push-6">
+                        <div class="booking-cta">
+                            <h1>Book Now!</h1>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi facere, soluta magnam consectetur molestias itaque
+                                ad sint fugit architecto incidunt iste culpa perspiciatis possimus voluptates aliquid consequuntur cumque quasi.
+                                Perspiciatis.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-pull-6">
+                        <div class="booking-form">
+                            <form action="{% url 'availability' %}" method="get" id='form1'>
+                                <div class="row no-margin">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <span class="form-label">Check In</span>
+                                            <input value="{{ form.checkin.value }}" name='checkin' class="form-control" type="date" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <span class="form-label">Check out</span>
+                                            <input value="{{ form.checkout.value }}" name='checkout' class="form-control" type="date" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <span class="form-label">Habitaciones</span>
+                                            <select value="{{ form.guest.value }}" name='guest' class="form-control">
+                                                <option value=1>1</option>
+                                                <option value=2>2</option>
+                                                <option value=3>3</option>
+                                            </select>
+                                            <span class="select-arrow"></span>
+                                        </div>
+                                    </div>
+                                </div>
+ 
+                                {% if form.errors %}
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <div class="alert alert-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% for error in form.non_field_errors %}
+                                        <div class="alert alert-danger">
+                                            <strong>{{ error|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <div class="form-btn">
+                                    <button type="submit" form="form1" value="Submit" class="submit-btn">Consultar Disponibilidad</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

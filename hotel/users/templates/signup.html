@@ -1,0 +1,63 @@
+{% extends "base_generic.html" %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2">
+<h4>Registro</h4>
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+<form method="post" action="{% url 'signup-user' %}" class="form-signup">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="username">Usuario</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">@</span>
+        </div>
+        <input name="username" value="{{ form.username.value|default:'' }}" type="text" class="form-control" id="username" placeholder="Usuario" required="">
+        <div class="invalid-feedback" style="width: 100%;">
+          Your username is required.
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="email">Email</label>
+      <input name="email" type="email" value="{{ form.email.value|default:'' }}" class="form-control" id="email" placeholder="you@example.com">
+      <div class="invalid-feedback">
+        Please enter a valid email address for shipping updates.
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="firstName">Password</label>
+        <input name="password1" type="password" class="form-control" id="password" placeholder="" value="" required="">
+        <div class="invalid-feedback">
+          Valid first name is required.
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="lastName">Password confirmación</label>
+        <input name="password2" type="password" class="form-control" id="password2" placeholder="" value="" required="">
+        <div class="invalid-feedback">
+          Valid last name is required.
+        </div>
+      </div>
+    </div>
+    <hr class="mb-4">
+    <button class="btn btn-primary btn-lg btn-block" type="submit">Continuar</button>
+<form>
+<div>
+{% endblock %}

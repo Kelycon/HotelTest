@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+{% load custom_tags %}
+
+{% block content %}
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+  <form class="form-signin text-center" method="post" action="{% url 'signin-user' %}">
+  {% csrf_token %}
+  <img class="mb-4" src="http://www.pngnames.com/files/4/Booking-Logo-PNG-Free-Download.png" alt="" width="300" height="180">
+  <h1 class="h3 mb-3 font-weight-normal">Log In</h1>
+  <div class="mb-3">
+    <label for="inputUsername" class="sr-only">Usuario</label>
+    <input type="text" value="{{ form.username.value|default:'' }}" name="username" id="inputUsername" class="form-control" placeholder="Usuario" required="" autofocus="">
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+    <input type="hidden" name="previous_url" value="{{ request.GET.next }}" />
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+</form>
+{% endblock %}
