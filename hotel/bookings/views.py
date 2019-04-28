@@ -76,10 +76,20 @@ class BookingCreate(CreateView):
 
     def exist_availability(self, checkin, checkout, room):
         # Validate if exist room
+        filter_booking_date_1 = Q(Q(Q(check_in__lte=checkin),  Q(check_in__lte=checkout)),
+                                  Q(Q(check_out__lte=checkout),  Q(check_out__gte=checkin)))
+        filter_booking_date_2 = Q(Q(Q(check_in__lte=checkin),  Q(check_in__lte=checkout)),
+                                  Q(Q(check_out__gte=checkout),  Q(check_out__gte=checkin)))
+        filter_booking_date_3 = Q(Q(Q(check_in__gte=checkin),  Q(check_out__lte=checkout)),
+                                  Q(Q(check_out__gte=checkout),  Q(check_out__gte=checkin)))
+        filter_booking_date_4 = Q(Q(Q(check_in__gte=checkin),  Q(check_out__lte=checkout)),
+                                  Q(Q(check_out__lte=checkin),  Q(check_out__gte=checkin)))
+
+        filter_booking = Q(filter_booking_date_1 | filter_booking_date_2 | filter_booking_date_3 | filter_booking_date_4)
 
         # Get bookins for dates and room type
         bookings_amout = Booking.objects.filter(
-                check_in__gte=checkin, check_out__lte=checkout, room_id=room.code
+                filter_booking, room_id=room.code
             ).count()
 
         # Compare with room availability

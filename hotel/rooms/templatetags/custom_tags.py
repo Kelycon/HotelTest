@@ -1,6 +1,6 @@
 from django import template
 from rooms.models import Room
-from hotel.settings import SITE_URL, MEDIA_URL
+from hotel.settings import SITE_URL
 
 register = template.Library()
 
@@ -12,4 +12,4 @@ def get_room_name(value):
 
 @register.filter
 def get_url_file(value):
-    return SITE_URL + MEDIA_URL + value
+    return SITE_URL + value.url

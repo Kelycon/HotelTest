@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.db.models import F, Case, IntegerField, When, Q, Count
 from .models import Room
+from bookings.models import Booking
 from .forms import FindAvailabilityListForm
 
 
@@ -33,19 +34,33 @@ class FindAvailability(ListView):
         guest = self.filter_form.cleaned_data.get('guest')
         booking_days = (checkout - checkin).days
 
-        filter_booking = Q(Q(Q(booking__check_in__gte=checkin), Q(booking__check_out__lte=checkout)) | Q(booking__code__isnull=True))
+        filter_booking_date_1 = Q(Q(Q(check_in__lte=checkin),  Q(check_in__lte=checkout)),
+                                  Q(Q(check_out__lte=checkout),  Q(check_out__gte=checkin)))
+        filter_booking_date_2 = Q(Q(Q(check_in__lte=checkin),  Q(check_in__lte=checkout)),
+                                  Q(Q(check_out__gte=checkout),  Q(check_out__gte=checkin)))
+        filter_booking_date_3 = Q(Q(Q(check_in__gte=checkin),  Q(check_out__lte=checkout)),
+                                  Q(Q(check_out__gte=checkout),  Q(check_out__gte=checkin)))
+        filter_booking_date_4 = Q(Q(Q(check_in__gte=checkin),  Q(check_out__lte=checkout)),
+                                  Q(Q(check_out__lte=checkin),  Q(check_out__gte=checkin)))
 
-        rooms = Room.objects.filter(
-            filter_booking, guest__gte=guest
-        ).values('type', 'guest', 'file', 'code').order_by('guest').annotate(
-            availability=F('availability') - Case(
-                    When(booking__code__isnull=False, then=Count('booking__code')),
-                    default=0,
-                    output_field=IntegerField()
-            ),
-            price=F('value') * booking_days
-        )
-        import ipdb; ipdb.set_trace()
+        filter_booking = Q(filter_booking_date_1 | filter_booking_date_2 | filter_booking_date_3 | filter_booking_date_4)
+
+        # Count bookings for room type
+        bookings = Booking.objects.filter(filter_booking, room__guest__gte=guest).values('room__type').annotate(
+                availability=Count('code')
+            )
+
+        # Get rooms by guest
+        rooms = Room.objects.filter(guest__gte=guest).annotate(
+                price=F('value') * booking_days
+            )
+
+        # Update rooms with real availability
+        for room in rooms:
+            for booking in bookings:
+                if room.code == booking.get('room__type'):
+                    room.availability = room.availability - booking.get('availability')
+
         return rooms
 
     def get_context_data(self, **kwargs):

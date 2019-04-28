@@ -20,6 +20,7 @@ class Room(models.Model):
     code = models.AutoField(db_column='HABITACION_ID', primary_key=True)
     type = models.IntegerField("Tipo", db_column='TIPO_HABITACION', default=SIMPLE, choices=RoomTypes, unique=True)
     guest = models.IntegerField("Máximo personas", db_column='MAXIMO_PERSONAS')
+    # Cantidad de habitaciones disponibles
     availability = models.IntegerField("Disponibles", db_column='DISPONIBILIDAD', default=0)
     value = models.DecimalField("Valor por día", db_column='VALOR_DIA', max_digits=18, decimal_places=2)
     file = models.FileField(
