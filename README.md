@@ -4,7 +4,7 @@ Python version 2.7
 
 ## Instalación
 
-pip install requirements.text
+pip install -r requirements.txt
 
 ## Puesta en marcha.
 
