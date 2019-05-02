@@ -3,7 +3,9 @@
 
 {% block content %}
 <div class="alert alert-info">
-    <strong>Mostrando reserva: {{ booking.code }}</strong>
+    <strong>Reserva: {{ booking.code }} <br> 
+      Habitación: {{ booking.room.type|get_room_name }}<br>
+      Total: {{ booking.total }}€ </strong>
 </div>
 <div class="row">
     <div class="col-md-4 order-md-2 mb-4">
