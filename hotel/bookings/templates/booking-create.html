@@ -66,7 +66,9 @@
         </div>
         <div class="mb-3 col-md-12">
           <label for="email">Comentario adicional <span class="text-muted">(Opcional)</span></label>
-          <textarea value="{{ form.observations.value|default:'' }}" name="observations" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          <textarea name="observations" class="form-control" id="exampleFormControlTextarea1" rows="3">
+            {{ form.observations.value|default:'' }}
+          </textarea>
         </div>
       </div>
       <hr class="mb-4">
@@ -78,7 +80,7 @@
         <div class="form-group">
           <select class="form-control" name="card_payment_type" id="exampleFormControlSelect1">
             {% for value, text in form.card_payment_type.field.choices %}
-                <option value="{{ value }}">{{ text }}</option>
+                <option {% if value == form.card_payment_type.value %} selected="" {% endif %} value="{{ value }}">{{ text }}</option>
             {% endfor %}
           </select>
         </div>
@@ -87,7 +89,7 @@
       <div class="row">
         <div class="col-md-6 mb-3">
           <label for="cc-name">Titular</label>
-          <input name="card_payment_holder" type="text" class="form-control" id="cc-name" placeholder="" required="">
+          <input value="{{ form.card_payment_holder.value|default:'' }}" name="card_payment_holder" type="text" class="form-control" id="cc-name" placeholder="" required="">
           <small class="text-muted">Nombre completo que se muestra en tarjeta</small>
           {% if form.card_payment_holder.errors %}
           <div class="invalid-feedback d-block">
@@ -97,7 +99,7 @@
         </div>
         <div class="col-md-6 mb-3">
           <label for="cc-number">Número tarjeta</label>
-          <input type="text" name="card_payment_number" class="form-control" id="cc-number" placeholder="" required="">
+          <input type="text" value="{{ form.card_payment_number.value|default:'' }}" name="card_payment_number" class="form-control" id="cc-number" placeholder="" required="">
           {% if form.card_payment_number.errors %}
           <div class="invalid-feedback d-block">
             {{ form.card_payment_number.errors }}
@@ -110,7 +112,7 @@
           <label for="cc-expiration">Mes vencimiento</label>
           <select class="form-control" name="card_payment_expiration_month" required="">
             {% for i in i|rjust:12 %}
-                <option value="{{ forloop.counter }}">{{ forloop.counter }}</option>
+                <option value="{{ forloop.counter }}" {% if forloop.counter == form.card_payment_expiration_month.value %} selected="" {% endif %}>{{ forloop.counter }}</option>
             {% endfor %}
 
           </select>
@@ -122,7 +124,7 @@
         </div>
         <div class="col-md-4 mb-3">
           <label for="cc-expiration">Año vencimiento</label>
-          <input type="number" min="2019" name="card_payment_expiration_year" class="form-control" id="cc-expiration" placeholder="" required="">
+          <input value="{{ form.card_payment_expiration_year.value|default:'' }}" type="number" min="2019" name="card_payment_expiration_year" class="form-control" id="cc-expiration" placeholder="" required="">
           {% if form.card_payment_expiration_year.errors %}
           <div class="invalid-feedback d-block">
             {{ form.card_payment_expiration_year.errors }}
@@ -131,7 +133,7 @@
         </div>
         <div class="col-md-4 mb-3">
           <label for="cc-cvv">CVC</label>
-          <input name="card_payment_cvc" type="number" min="000" class="form-control" id="cc-cvv" placeholder="" required="">
+          <input name="card_payment_cvc" value="{{ form.card_payment_cvc.value|default:'' }}" type="number" min="000" class="form-control" id="cc-cvv" placeholder="" required="">
           {% if form.card_payment_cvc.errors %}
           <div class="invalid-feedback d-block">
             {{ form.card_payment_cvc.errors }}
