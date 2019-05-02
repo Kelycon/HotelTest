@@ -12,6 +12,8 @@
               <th scope="col">Fecha ingreso</th>
               <th scope="col">Fecha salida</th>
               <th scope="col">Habitación</th>
+              <th scope="col">Precio</th>
+
             </tr>
           </thead>
           <tbody>
@@ -22,6 +24,7 @@
               <td>{{ row.check_in }}</td>
               <td>{{ row.check_out }}</td>
               <td>{{ row.room.type|get_room_name  }}</td>
+              <td>{{ row.total  }}€</td>
             </tr>
             {% endif %}
             {% endfor %}
