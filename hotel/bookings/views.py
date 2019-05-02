@@ -190,4 +190,5 @@ class BookingUpdate(UpdateView):
         return super(BookingUpdate, self).dispatch(request=request)
 
     def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, 'Tu reserva se ha actualizado satisfactoriamente.')
         return reverse("booking-detail", kwargs={'pk': self.kwargs.get('pk')})
