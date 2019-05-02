@@ -12,6 +12,7 @@ from .models import Booking
 from rooms.models import Room
 from django.contrib.auth.models import User
 from rooms.forms import FindAvailabilityListForm
+from django.contrib import messages
 from .forms import (
     BookingCreateForm, BookingUpdateForm
 )
@@ -71,6 +72,8 @@ class BookingCreate(CreateView):
                 self.object.total = self.get_total_booking(self.object.check_in, self.object.check_out, self.object.room.value)
 
                 self.object.save()
+
+                messages.add_message(self.request, messages.SUCCESS, 'Tu reserva se ha guardado satisfactoriamente.')
 
                 return redirect('booking-detail', pk=self.object.code)
         except LockTimeout:
