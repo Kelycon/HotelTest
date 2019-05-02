@@ -113,6 +113,17 @@
          <strong>{{ error|escape }}</strong>
     </div>
     {% endif %}
+
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <div class="alert alert-success">
+         <strong>{{ message|escape }}</strong>
+    </div>
+    {% endif %}
+
+    {% endfor %}
+    {% endif %}
     {% block content %}
     {% endblock %}
 
