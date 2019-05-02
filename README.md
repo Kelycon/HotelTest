@@ -2,12 +2,12 @@
 
 Python version 2.7
 
-##Instalación
+## Instalación
 
 pip install requirements.text
 
-##Puesta en marcha.
+## Puesta en marcha.
 
-redis-server
+redis-server en una ventana de la terminal
 
-./manage.py runserver
+./manage.py runserver en otra ventana de la terminal
