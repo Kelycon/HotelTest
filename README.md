@@ -6,7 +6,7 @@ Python version 2.7
 
 Crear e iniciar un nuevo virtualenv
 
-pip install -r requirements.txt --user
+pip install -r requirements.txt
 
 ## Puesta en marcha.
 Ir a la app hotel
