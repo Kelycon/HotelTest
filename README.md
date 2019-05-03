@@ -13,4 +13,6 @@ Ir a la app hotel
 
 redis-server en una ventana de la terminal
 
+./manage.py collectstatic
+
 ./manage.py runserver en otra ventana de la terminal
